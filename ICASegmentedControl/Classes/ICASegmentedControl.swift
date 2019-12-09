@@ -108,7 +108,7 @@ public class ICASegmentedControl: UIControl, ICASegmentedControlBehaviour, ICASe
         
         CATransaction.begin()
         CATransaction.setAnimationDuration(0.15)
-        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear))
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear))
         selectedIndicatorLayer.frame = frameSelectionIndicator()
         CATransaction.commit()
       } else {
@@ -250,7 +250,7 @@ public class ICASegmentedControl: UIControl, ICASegmentedControlBehaviour, ICASe
       titleLayer.font = titleFont.fontName as CFTypeRef?
       titleLayer.fontSize = titleFont.pointSize
       titleLayer.foregroundColor = titleColor.cgColor
-      titleLayer.alignmentMode = kCAAlignmentCenter
+        titleLayer.alignmentMode = CATextLayerAlignmentMode.center
       titleLayer.backgroundColor = UIColor.clear.cgColor
       titleLayer.contentsScale = UIScreen.main.scale
       scrollView?.layer.addSublayer(titleLayer)
@@ -272,7 +272,7 @@ public class ICASegmentedControl: UIControl, ICASegmentedControlBehaviour, ICASe
     let title = sectionTitles[index]
     let selected = (index == selectedIndex) ? true : false
     let titleAttributes = selected ? selectedTitleAttributes() : titleTextAttributes()
-    let size = (title as NSString).size(attributes: titleAttributes)
+    let size = (title as NSString).size(withAttributes: titleAttributes)
     return size
   }
   
@@ -288,15 +288,15 @@ public class ICASegmentedControl: UIControl, ICASegmentedControlBehaviour, ICASe
   }
   
   //MARK: Text Styling
-  func selectedTitleAttributes() -> [String: Any] {
-    let defaults = [NSFontAttributeName: selectedTitleFont,
-                    NSForegroundColorAttributeName: selectedTitleColor] as [String : Any]
+    func selectedTitleAttributes() -> [NSAttributedString.Key: Any] {
+    let defaults = [NSAttributedString.Key.font: selectedTitleFont,
+        NSAttributedString.Key.foregroundColor: selectedTitleColor] as [NSAttributedString.Key : Any]
     return defaults
   }
   
-  func titleTextAttributes() -> [String: Any] {
-    let defaults = [NSFontAttributeName: titleFont,
-                    NSForegroundColorAttributeName: titleColor] as [String : Any]
+    func titleTextAttributes() -> [NSAttributedString.Key: Any] {
+    let defaults = [NSAttributedString.Key.font: titleFont,
+                    NSAttributedString.Key.foregroundColor: titleColor] as [NSAttributedString.Key : Any]
     return defaults
   }
   
@@ -306,9 +306,9 @@ public class ICASegmentedControl: UIControl, ICASegmentedControlBehaviour, ICASe
     
     var titleAttrs = selected ? selectedTitleAttributes() : titleTextAttributes()
     
-    if let titleColor = titleAttrs[NSForegroundColorAttributeName] {
+    if let titleColor = titleAttrs[NSAttributedString.Key.foregroundColor] {
       var dictTitleAttr = titleAttrs
-      dictTitleAttr[NSForegroundColorAttributeName] = (titleColor as! UIColor).cgColor
+      dictTitleAttr[NSAttributedString.Key.foregroundColor] = (titleColor as! UIColor).cgColor
       titleAttrs = dictTitleAttr
       return NSAttributedString(string: title, attributes: titleAttrs)
     } else {
